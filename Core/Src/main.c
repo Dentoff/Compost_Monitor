@@ -93,8 +93,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-#define LD3_Pin GPIO_PIN_14
-#define LD3_GPIO_Port GPIOB
+  LED_GPIO_SETUP();
 
   while (1)
   {
