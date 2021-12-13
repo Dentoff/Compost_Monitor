@@ -93,7 +93,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  LED_GPIO_SETUP();
+  LED_GPIO_SETUP(); // Resets the LED pins to ensure correct function.
 
   while (1)
   {
