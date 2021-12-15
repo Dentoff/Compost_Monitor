@@ -14,7 +14,6 @@
 #include "LED_UI_F207ZGT6.h"
 
 void LED_GPIO_SETUP() {
-	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
 }
 
