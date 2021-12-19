@@ -10,6 +10,8 @@
 #ifndef INC_I2C_BASE_H_
 #define INC_I2C_BASE_H_
 
+#define I2C_BLOCKING 0
+
 void I2C_Handler_Set(I2C_HandleTypeDef *HandlerSent);
 
 #endif /* INC_I2C_BASE_H_ */

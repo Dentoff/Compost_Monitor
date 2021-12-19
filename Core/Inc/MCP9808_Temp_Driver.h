@@ -107,13 +107,13 @@
 /***** CRITICAL *****/
 
 /***** UPPER *****/ // 65 degrees
-#define MCP9808_CRITICAL_MSB 0x04
-#define MCP9808_CRITICAL_LSB 0x00
+#define MCP9808_UPPER_MSB 0x04
+#define MCP9808_UPPER_LSB 0x00
 /***** UPPER *****/
 
 /***** LOWER *****/ //10 degrees
-#define MCP9808_CRITICAL_MSB 0x00
-#define MCP9808_CRITICAL_LSB 0xA0
+#define MCP9808_LOWER_MSB 0x00
+#define MCP9808_LOWER_LSB 0xA0
 /***** LOWER *****/
 /***** TEMPERATUER LIMITS *****/
 

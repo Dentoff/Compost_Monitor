@@ -170,7 +170,7 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-  I2C_Handler_Set(hi2c1);
+  I2C_Handler_Set(&hi2c1);
   /* USER CODE END I2C1_Init 2 */
 
 }
