@@ -37,7 +37,15 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef enum {
+	FALSE,
+	TRUE
+} bool;
 
+typedef enum {
+	ERROR_U = -1,
+	PASS  = 0
+} ERROR_STATE;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

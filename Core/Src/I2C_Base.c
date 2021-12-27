@@ -9,35 +9,40 @@
  *  it's basic communications.
  */
 
-#include "stm32f2xx_hal.h"
-#include "MCP9808_Temp_Driver.h"
+#include "main.h" // The include for stm32f2xx_hal.h is part of main.h
 
-I2C_HandleTypeDef *i2cHandler;
+#include "MCP9808_Temp_Driver.h" // Inlcude for the temp chip/ might not be needed
+
+I2C_HandleTypeDef* i2cHandler;
 
 void I2C_Handler_Set(I2C_HandleTypeDef HandlerSent) {
     i2cHandler = &HandlerSent;
 }
 
-//#if I2C_BLOCKING
+//#IF I2C_BLOCKING
 
 /*
- * Currently works in blocking mode as part of the
- * The below is used to check that the peripheral is active
- * and communicating correctly.
- * 
- * TO DO
+ * Setting up I2C to work in blocking
+ * will set up a non blocking version as well
+ * currenlty only used for the temp sensor
+ * but will also be tested with the Accel.
  */
-void I2C_Chip_Check(int Address, int Id_Register, int Real_ID, int Size, int Timeout) {
 
-	int *Chip_Return;
+int I2C_Chip_Check(int Address, uint8_t* Id_Register, int Size, int Timeout) {
+
+	uint8_t* Chip_Return = 0;
 
     //HAL_StatusTypeDef HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 
-    HAL_I2C_Master_Transmit(&i2cHandler, Address, Id_Register, Size, Timeout);
+    if (HAL_I2C_Master_Transmit(i2cHandler, Address, Id_Register, Size, Timeout) != HAL_OK) {
+    	return ERROR_U;
+    }
 
     // HAL_StatusTypeDef HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 
-    HAL_I2C_Master_Receive(&i2cHandler, Address, &Chip_Return, Size, Timeout);
+    if (HAL_I2C_Master_Receive(i2cHandler, Address, Chip_Return, Size, Timeout) != HAL_OK) {
+    	return ERROR_U;
+    }
 
     //Master transmit the chip ID register address 
 
@@ -47,10 +52,30 @@ void I2C_Chip_Check(int Address, int Id_Register, int Real_ID, int Size, int Tim
 
 	// Check that the ID returned matches the ID passed
 
-	//return result.
+	return ERROR_U;
 }
 
-//#endif
+
+uint8_t I2C_Read_8Bit(int Address, uint8_t* Id_Register, int Size, int Timeout){
+
+	uint8_t Chip_Return = ERROR_U;
+
+	uint8_t* Chip_Data = 0;
+
+    if (HAL_I2C_Master_Transmit(i2cHandler, Address, Id_Register, Size, Timeout) != HAL_OK) {
+    	return Chip_Return;
+    }
+
+    if (HAL_I2C_Master_Receive(i2cHandler, Address, Chip_Data, Size, Timeout) != HAL_OK) {
+    	return Chip_Return;
+    }
+
+    Chip_Return = *Chip_Data;
+
+	return Chip_Return;
+}
+
+//#ENDIF
 
 
 /********** End Of File I2C_Base.c **********/
