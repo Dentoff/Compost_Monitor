@@ -9,17 +9,18 @@
  *  it's basic communications.
  */
 
-#include "main.h" // The include for stm32f2xx_hal.h is part of main.h
+#include "I2C_Base.h"
 
-#include "MCP9808_Temp_Driver.h" // Inlcude for the temp chip/ might not be needed
+#define I2C_BLOCKING 1 //Set to blocking I2C comms
 
 I2C_HandleTypeDef* i2cHandler;
 
-void I2C_Handler_Set(I2C_HandleTypeDef HandlerSent) {
-    i2cHandler = &HandlerSent;
+void I2C_Handler_Set(I2C_HandleTypeDef *HandlerSent) {
+    i2cHandler = HandlerSent;
+    i2cHandler->State == HAL_I2C_STATE_READY;
 }
 
-//#IF I2C_BLOCKING
+#if I2C_BLOCKING
 
 /*
  * Setting up I2C to work in blocking
@@ -28,32 +29,32 @@ void I2C_Handler_Set(I2C_HandleTypeDef HandlerSent) {
  * but will also be tested with the Accel.
  */
 
-int I2C_Chip_Check(int Address, uint8_t* Id_Register, int Size, int Timeout) {
-
-	uint8_t* Chip_Return = 0;
-
-    //HAL_StatusTypeDef HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
-
-    if (HAL_I2C_Master_Transmit(i2cHandler, Address, Id_Register, Size, Timeout) != HAL_OK) {
-    	return ERROR_U;
-    }
-
-    // HAL_StatusTypeDef HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
-
-    if (HAL_I2C_Master_Receive(i2cHandler, Address, Chip_Return, Size, Timeout) != HAL_OK) {
-    	return ERROR_U;
-    }
-
-    //Master transmit the chip ID register address 
-
-    //Master recive the return from the chip 
-
-	// Request the chip ID
-
-	// Check that the ID returned matches the ID passed
-
-	return ERROR_U;
-}
+//int I2C_Chip_Check(int Address, uint8_t* Id_Register, int Size, int Timeout) {
+//
+//	uint8_t* Chip_Return = 0;
+//
+//    //HAL_StatusTypeDef HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+//
+//    if (HAL_I2C_Master_Transmit(i2cHandler, Address, Id_Register, Size, Timeout) != HAL_OK) {
+//    	return ERROR_U;
+//    }
+//
+//    // HAL_StatusTypeDef HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+//
+//    if (HAL_I2C_Master_Receive(i2cHandler, Address, Chip_Return, Size, Timeout) != HAL_OK) {
+//    	return ERROR_U;
+//    }
+//
+//    //Master transmit the chip ID register address
+//
+//    //Master recive the return from the chip
+//
+//	// Request the chip ID
+//
+//	// Check that the ID returned matches the ID passed
+//
+//	return ERROR_U;
+//}
 
 
 uint8_t I2C_Read_8Bit(int Address, uint8_t* Id_Register, int Size, int Timeout){
@@ -75,7 +76,33 @@ uint8_t I2C_Read_8Bit(int Address, uint8_t* Id_Register, int Size, int Timeout){
 	return Chip_Return;
 }
 
-//#ENDIF
+uint16_t I2C_Read_16Bit(uint8_t Address, uint8_t Register_Address, int Timeout){
 
+	uint8_t buffer[16];
+	int16_t Raw_Value;
+
+	buffer[0] = Register_Address;
+
+	//HAL_StatusTypeDef I2C_Status;
+
+	if(HAL_I2C_Master_Transmit(i2cHandler, Address, buffer, 1, HAL_MAX_DELAY) != HAL_OK) { // need to set a sensible delay at some point
+		return 0;
+	}
+
+	if (HAL_I2C_Master_Receive(i2cHandler, Address, buffer, 2, HAL_MAX_DELAY) != HAL_OK){
+		return 0; // set up proper error handling
+	}
+
+	Raw_Value = ((int16_t)buffer[0] << 4) | (buffer[1] >> 4);
+
+
+	return Raw_Value;
+}
+
+#else // NON_BLOCKING
+
+
+
+#endif
 
 /********** End Of File I2C_Base.c **********/

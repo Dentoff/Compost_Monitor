@@ -99,8 +99,31 @@ int main(void)
   while (1)
   {
 	  LED_Standby();
-    /* USER CODE END WHILE */
 
+//	  MCP9808_Chip_Check();
+
+	  /*****TEMP DEVICE ID TEST*****/
+	  uint8_t buffer[16];
+	  int16_t Raw_Value;
+
+	  buffer[0] = MCP9808_MANUFACTURER_ID;
+
+	  //HAL_StatusTypeDef I2C_Status;
+
+	  if(HAL_I2C_Master_Transmit(&hi2c1, MCP9808_ADR, buffer, 1, HAL_MAX_DELAY) != HAL_OK) { // need to set a sensible delay at some point
+		  return 0;
+	  }
+
+	  if (HAL_I2C_Master_Receive(&hi2c1, MCP9808_ADR, buffer, 2, HAL_MAX_DELAY) != HAL_OK){
+		  return 0; // set up proper error handling
+	  }
+
+	  Raw_Value = ((int16_t)buffer[0]) | (buffer[1]);
+
+	  HAL_Delay(500);
+	  /*****TEMP DEVICE ID TEST*****/
+
+    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -170,7 +193,7 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-  I2C_Handler_Set(&hi2c1);
+  I2C_Handler_Set(hi2c1);
   /* USER CODE END I2C1_Init 2 */
 
 }

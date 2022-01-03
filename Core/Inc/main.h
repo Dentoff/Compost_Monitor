@@ -32,7 +32,8 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "I2C_Base.h"
+#include "MCP9808_Temp_Driver.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -15,7 +15,8 @@
 #define INC_MCP9808_TEMP_DRIVER_H_
 
 /***** ADDRESS *****/
-#define MCP9808_ADR 0b0011000 //Seven bit for the R/W bit within coms
+
+#define MCP9808_ADR 0x18 << 1 //Seven bit for the R/W bit within coms
 /***** ADDRESS *****/
 
 /***** REGISTERS *****/
@@ -118,6 +119,12 @@
 /***** TEMPERATUER LIMITS *****/
 
 /***** COMMANDS *****/
+
+/***** FUNCTIONS *****/
+
+void MCP9808_Chip_Check();
+
+/***** FUNCTIONS *****/
 
 #endif /* INC_MCP9808_TEMP_DRIVER_H_ */
 
